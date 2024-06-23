@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { StopTrainingComponent } from './stop-training.component';
 import { ExerciseService } from '../exercise.services';
@@ -9,8 +9,6 @@ import { ExerciseService } from '../exercise.services';
   styleUrl: './current-training.component.scss',
 })
 export class CurrentTrainingComponent implements OnInit {
-  @Output() trainExitListener = new EventEmitter<void>();
-
   progress: number = 0;
   timer!: any;
 
@@ -24,15 +22,20 @@ export class CurrentTrainingComponent implements OnInit {
   }
 
   startorResume() {
-    const stepSec =
-      (this.exerciseServ.getRunningExercise().duration / 100) * 1000;
-    console.log('deuration', stepSec);
-    this.timer = setInterval(() => {
-      this.progress = this.progress + 1;
-      if (this.progress >= 100) {
-        clearInterval(this.timer);
-      }
-    }, stepSec);
+    const runningExercise = this.exerciseServ.getRunningExercise();
+    if (runningExercise && runningExercise.duration !== undefined) {
+      const stepSec = (runningExercise.duration / 100) * 1000;
+      console.log('deuration in start or resume', stepSec);
+      this.timer = setInterval(() => {
+        this.progress = this.progress + 1;
+        if (this.progress >= 100) {
+          this.exerciseServ.completeExercise();
+          clearInterval(this.timer);
+        }
+      }, stepSec);
+    } else {
+      console.error('No running exercise or duration is not defined.');
+    }
   }
 
   onStop() {
@@ -44,9 +47,9 @@ export class CurrentTrainingComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((res) => {
-      console.log(res);
+      console.log('after closed yes', res);
       if (res) {
-        this.trainExitListener.emit();
+        this.exerciseServ.cancelExercise(this.progress);
       } else {
         this.startorResume();
       }
