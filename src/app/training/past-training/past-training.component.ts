@@ -1,8 +1,10 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
@@ -24,18 +26,29 @@ export class PastTrainingComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) pagin!: MatPaginator;
+  @Output() stateChanged = new EventEmitter<string>();
 
   constructor(private exerciseServ: ExerciseService) {}
 
   ngOnInit(): void {
     this.exChangedSubscription =
-      this.exerciseServ.finishedExercisesChanged.subscribe((exercise: any) => {
-        console.log('exerciseServ.finishedExercisesChanged', exercise);
-        this.dataSource.data = exercise;
-      });
-    console.log('Completeed Datasource data', this.dataSource.data);
+      this.exerciseServ.finishedExercisesChanged.subscribe(
+        (exercises: any[]) => {
+          console.log('exerciseServ.finishedExercisesChanged', exercises);
+          this.dataSource.data = exercises;
+          // debugger;
+          // exercises.forEach((exercise) => {
+          //   if (
+          //     exercise.state === 'Completed' ||
+          //     exercise.state === 'Cancelled'
+          //   ) {
+          //     this.stateChanged.emit(exercise.state); // Emit state change
+          //   }
+          // });
+        }
+      );
 
-    this.exerciseServ.fetchCompletedOrCancelled();
+    this.exerciseServ.fetchCompletedOrCancelled(); // Assuming this fetches data
   }
 
   ngAfterViewInit(): void {
@@ -63,4 +76,18 @@ export class PastTrainingComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.exChangedSubscription.unsubscribe();
   }
+
+  getRowClass(state: string): string {
+    if (state === 'Completed') {
+      return 'row-completed'; // Return class for Completed state
+    } else if (state === 'Cancelled') {
+      return 'row-cancelled'; // Return class for Cancelled state
+    }
+    return ''; // Return empty string for default case
+  }
+ 
 }
+
+
+
+

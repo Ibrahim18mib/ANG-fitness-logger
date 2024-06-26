@@ -8,10 +8,10 @@ import { Injectable } from '@angular/core';
 export class ExerciseService {
   private availableExercises: Exercise[] = [];
   private runningExercise: Exercise | null = null;
-  private exercises: Exercise[] = [];
+  // private exercises: Exercise[] = [];
   exerciseChanged = new Subject<Exercise | null>();
   exercisesChanged = new Subject<Exercise[] | null>();
-  finishedExercisesChanged = new Subject<Exercise[] | null>();
+  finishedExercisesChanged = new Subject<Exercise[] | any>();
 
   constructor(private db: AngularFirestore) {}
 

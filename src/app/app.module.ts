@@ -21,6 +21,8 @@ import { ExerciseService } from './training/exercise.services';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from '../environments/environment';
+import { TimestampDatePipe } from './custom-date.pipe';
+import { DatePipe } from '@angular/common';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +35,7 @@ import { environment } from '../environments/environment';
     WelcomeComponent,
     HeaderComponent,
     SidenavListComponent,
-
+    TimestampDatePipe,
     StopTrainingComponent,
   ],
   imports: [
@@ -48,7 +50,8 @@ import { environment } from '../environments/environment';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
   ],
-  providers: [AuthService, ExerciseService],
+  providers: [AuthService, ExerciseService,DatePipe],
   bootstrap: [AppComponent],
+  exports:[TimestampDatePipe]
 })
 export class AppModule {}
