@@ -3,7 +3,6 @@ import { Subject, map } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Injectable } from '@angular/core';
 
-
 @Injectable()
 export class ExerciseService {
   private availableExercises: Exercise[] = [];
@@ -46,13 +45,19 @@ export class ExerciseService {
   }
 
   fetchCompletedOrCancelled() {
-    this.db.collection('finishedExercise').valueChanges().subscribe((exercise:any[]) => {
-      console.log("fetchCompletedOrCancelled",exercise);
-      this.finishedExercisesChanged.next(exercise)
-    })
+    this.db
+      .collection('finishedExercise')
+      .valueChanges()
+      .subscribe((exercise: any[]) => {
+        console.log('fetchCompletedOrCancelled', exercise);
+        this.finishedExercisesChanged.next(exercise);
+      });
   }
 
   startExercise(selectedId: string) {
+    // this.db
+    //   .doc('availableExercises/' + selectedId)
+    //   .update({ lastSeen: new Date() });
     const checkExercise = this.availableExercises.find(
       (existing) => existing.id === selectedId
     );

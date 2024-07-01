@@ -20,6 +20,7 @@ import { AuthService } from './auth/auth.service';
 import { ExerciseService } from './training/exercise.services';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from '../environments/environment';
 import { TimestampDatePipe } from './custom-date.pipe';
 import { DatePipe } from '@angular/common';
@@ -49,6 +50,7 @@ import { DatePipe } from '@angular/common';
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
+    AngularFireAuthModule,
   ],
   providers: [AuthService, ExerciseService,DatePipe],
   bootstrap: [AppComponent],

@@ -1,32 +1,51 @@
-import { AuthData } from './auth-data.model';
+import { IAuthData } from './auth-data.model';
 import { User } from './user.module';
 import { Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Injectable()
 export class AuthService {
   private user!: User | null;
   authChange = new Subject<boolean>();
 
-  constructor(private route: Router) {}
+  constructor(
+    private route: Router,
+    private angularFireAuth: AngularFireAuth
+  ) {}
 
-  registerUser(authdata: AuthData) {
-    this.user = {
-      email: authdata.email,
-      userId: Math.round(Math.random() * 10000).toString(),
-    };
-    this.authSuccessFull();
-    // this.authChange.next(true);
-    // this.route.navigate(['/training']);
+  registerUser(authdata: IAuthData) {
+    this.angularFireAuth
+      .createUserWithEmailAndPassword(authdata.email, authdata.password)
+      .then((res) => {
+        console.log('authregres', res);
+        this.authSuccessFull();
+      })
+      .catch((err) => {
+        console.log('authregrerr', err);
+      });
   }
 
-  login(authdata: AuthData) {
-    this.user = {
-      email: authdata.email,
-      userId: Math.round(Math.random() * 10000).toString(),
-    };
-    this.authSuccessFull();
+  login(authData: IAuthData) {
+    console.log('login data', authData);
+    this.angularFireAuth
+      .signInWithEmailAndPassword(authData.email, authData.password)
+      .then((res) => {
+        console.log('authsignres', res);
+        this.authSuccessFull();
+      })
+      .catch((err) => {
+        console.log('authsignrerr', err);
+      });
+
     // this.authChange.next(true);
     // this.route.navigate(['/training']);
   }
@@ -45,7 +64,7 @@ export class AuthService {
     return this.user != null;
   }
 
-  private authSuccessFull() {
+  private authSuccessFull(): void {
     this.authChange.next(true);
     this.route.navigate(['/training']);
   }
