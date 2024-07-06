@@ -2,6 +2,7 @@ import { Exercise } from './exercise.module';
 import { Subject, Subscription, map } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Injectable } from '@angular/core';
+import { UIService } from '../../sharedUI/ui.service';
 
 @Injectable()
 export class ExerciseService {
@@ -14,13 +15,14 @@ export class ExerciseService {
   exercisesChanged = new Subject<Exercise[] | null>();
   finishedExercisesChanged = new Subject<Exercise[] | any>();
 
-  constructor(private db: AngularFirestore) {}
+  constructor(private db: AngularFirestore, private uiServ: UIService) {}
 
   // getAvailableExercise() {
   //   return this.availableExercises.slice();
   // }
 
   fetchAvailableExercise() {
+    this.uiServ.loadingStateChanged.next(true);
     this.fbSubs.push(
       this.db
         .collection('availableExercises')
@@ -42,6 +44,7 @@ export class ExerciseService {
         )
         .subscribe((exercises: Exercise[]) => {
           // console.log("fetched exercisess",exercises);
+          this.uiServ.loadingStateChanged.next(false);
           this.availableExercises = exercises;
           this.exercisesChanged.next([...this.availableExercises]);
         })
@@ -60,10 +63,10 @@ export class ExerciseService {
     );
   }
 
-  cancelledSubscriptions(){
-    this.fbSubs.forEach( sub => {
+  cancelledSubscriptions() {
+    this.fbSubs.forEach((sub) => {
       sub.unsubscribe();
-    })
+    });
   }
 
   startExercise(selectedId: string) {

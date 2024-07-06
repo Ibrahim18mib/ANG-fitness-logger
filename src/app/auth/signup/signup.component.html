@@ -19,6 +19,7 @@
             <mat-hint align="end">must be above(18+) </mat-hint>
         </mat-form-field>
         <mat-checkbox ngModel name="agree" required color="danger">Terma and Conditions!</mat-checkbox>
-        <button mat-raised-button color="primary" [disabled]="f.invalid">Submit</button>
+        <button *ngIf="!isLoading" mat-raised-button color="primary" [disabled]="f.invalid">Submit</button>
+        <mat-spinner *ngIf="isLoading"></mat-spinner>
     </form>
 </section>

@@ -1,32 +1,51 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { ExerciseService } from '../exercise.services';
 import { Exercise } from '../exercise.module';
 import { NgForm } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, Subscriber, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { UIService } from '../../../sharedUI/ui.service';
 
 @Component({
   selector: 'app-new-training',
   templateUrl: './new-training.component.html',
   styleUrl: './new-training.component.scss',
 })
-export class NewTrainingComponent implements OnInit,OnDestroy {
+export class NewTrainingComponent implements OnInit, OnDestroy {
   @Output() onTrainingListener = new EventEmitter<void>();
 
-  exerciseLists!:Exercise[] | null;
-  exerciseSubscription!: Subscription;
+  exerciseLists!: Exercise[] | null;
+  private exerciseSubscription!: Subscription;
+  private loadSubscription!: Subscription;
+
+  isLoading = true;
 
   constructor(
     private ExerciseServ: ExerciseService,
-    private db: AngularFirestore
+    private db: AngularFirestore,
+    private uiServ: UIService
   ) {}
 
   ngOnInit(): void {
-   this.exerciseSubscription = this.ExerciseServ.exercisesChanged.subscribe(exercises => {
-      console.log("exerciseesl",exercises)
-      this.exerciseLists = exercises
-    })
+    this.loadSubscription = this.uiServ.loadingStateChanged.subscribe(
+      (isLoaded) => {
+        this.isLoading = isLoaded;
+      }
+    );
+    this.exerciseSubscription = this.ExerciseServ.exercisesChanged.subscribe(
+      (exercises) => {
+        console.log('exerciseesl', exercises);
+        this.exerciseLists = exercises;
+        // this.isLoading = false
+      }
+    );
     this.ExerciseServ.fetchAvailableExercise();
   }
 
@@ -37,5 +56,6 @@ export class NewTrainingComponent implements OnInit,OnDestroy {
 
   ngOnDestroy(): void {
     this.exerciseSubscription.unsubscribe();
+    this.loadSubscription.unsubscribe();
   }
 }

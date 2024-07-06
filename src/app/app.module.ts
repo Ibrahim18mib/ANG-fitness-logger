@@ -24,6 +24,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from '../environments/environment';
 import { TimestampDatePipe } from './custom-date.pipe';
 import { DatePipe } from '@angular/common';
+import { UIService } from '../sharedUI/ui.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,7 +53,7 @@ import { DatePipe } from '@angular/common';
     AngularFirestoreModule,
     AngularFireAuthModule,
   ],
-  providers: [AuthService, ExerciseService,DatePipe],
+  providers: [AuthService, ExerciseService,DatePipe,UIService],
   bootstrap: [AppComponent],
   exports:[TimestampDatePipe]
 })
