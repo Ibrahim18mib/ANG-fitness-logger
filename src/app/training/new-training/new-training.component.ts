@@ -46,6 +46,11 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
         // this.isLoading = false
       }
     );
+    this.fetchExercise();
+  }
+
+  fetchExercise() {
+    console.log('Fetching OR REtry Fetch Clicked');
     this.ExerciseServ.fetchAvailableExercise();
   }
 
