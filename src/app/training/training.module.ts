@@ -2,14 +2,11 @@ import { NgModule } from '@angular/core';
 import { CurrentTrainingComponent } from './current-training/current-training.component';
 import { NewTrainingComponent } from './new-training/new-training.component';
 import { PastTrainingComponent } from './past-training/past-training.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { TrainingComponent } from './training.component';
-import { MaterialModule } from '../material.module';
 import { TimestampDatePipe } from '../custom-date.pipe';
 import { StopTrainingComponent } from './current-training/stop-training.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { SharedModule } from '../../sharedUI/shared.module';
+import { TrainingRoutingModule } from './training-routing.module';
 
 @NgModule({
   declarations: [
@@ -20,14 +17,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     PastTrainingComponent,
     StopTrainingComponent,
   ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MaterialModule,
-    FlexLayoutModule,
-    AngularFirestoreModule,
-  ],
+  imports: [SharedModule, TrainingRoutingModule],
   exports: [],
   providers: [TimestampDatePipe],
 })

@@ -16,7 +16,7 @@ import { environment } from '../environments/environment';
 import { DatePipe } from '@angular/common';
 import { UIService } from '../sharedUI/ui.service';
 import { AuthModule } from './auth/auth.module';
-import { TrainingModule } from './training/training.module';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,9 +34,8 @@ import { TrainingModule } from './training/training.module';
     FormsModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
-
+    AngularFirestoreModule,
     AuthModule,
-    TrainingModule,
   ],
   providers: [AuthService, ExerciseService, DatePipe, UIService],
   bootstrap: [AppComponent],
