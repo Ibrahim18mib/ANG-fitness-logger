@@ -30,6 +30,8 @@ export class LoginComponent implements OnInit {
     // this.isLoading$ = this.store.select((state) => state.ui.isLoading);
 
     this.isLoading$ = this.store.select(fromRoot.getisLoading);
+    
+    
     //  this.loadSubject =  this.uiServ.loadingStateChanged.subscribe( isLoaded => {
     //   this.isLoading = isLoaded;
     //  })

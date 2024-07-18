@@ -12,6 +12,8 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, Subscriber, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UIService } from '../../../sharedUI/ui.service';
+import { Store } from '@ngrx/store';
+import * as fromRoot from '../../../app.reducer';
 
 @Component({
   selector: 'app-new-training',
@@ -27,13 +29,16 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
 
   isLoading = true;
 
+  isLoading$!:Observable<boolean>
+
   constructor(
     private ExerciseServ: ExerciseService,
     private db: AngularFirestore,
-    private uiServ: UIService
+    private uiServ: UIService,private store:Store<fromRoot.State>
   ) {}
 
   ngOnInit(): void {
+    this.isLoading$ = this.store.select(fromRoot.getisLoading);
     this.loadSubscription = this.uiServ.loadingStateChanged.subscribe(
       (isLoaded) => {
         this.isLoading = isLoaded;
@@ -64,8 +69,6 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
       this.exerciseSubscription.unsubscribe();
     }
 
-    if (this.loadSubscription) {
-      this.loadSubscription.unsubscribe();
-    }
+    
   }
 }

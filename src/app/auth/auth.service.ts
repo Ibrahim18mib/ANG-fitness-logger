@@ -45,19 +45,19 @@ export class AuthService {
 
   registerUser(authdata: IAuthData) {
     // this.uiServ.loadingStateChanged.next(true);
-    this.store.dispatch(new UI.Start_Loading());
+    this.store.dispatch(new UI.StartLoading());
     this.angularFireAuth
       .createUserWithEmailAndPassword(authdata.email, authdata.password)
       .then((res) => {
         console.log('authsignres', res);
         // this.uiServ.loadingStateChanged.next(false);
-        this.store.dispatch(new UI.Stop_Loading());
+        this.store.dispatch(new UI.StopLoading());
         // this.authSuccessFull();
       })
       .catch((err) => {
         console.log('authsignerr', err);
         // this.uiServ.loadingStateChanged.next(false);
-        this.store.dispatch(new UI.Stop_Loading());
+        this.store.dispatch(new UI.StopLoading());
         this.uiServ.showSnackbar(err.message, undefined, 3000);
         // this.matSnackBar.open(err, undefined, {
         //   duration: 3000,
@@ -68,19 +68,19 @@ export class AuthService {
   login(authData: IAuthData) {
     console.log('login data', authData);
     // this.uiServ.loadingStateChanged.next(true);
-    this.store.dispatch(new UI.Start_Loading());
+    this.store.dispatch(new UI.StartLoading());
     this.angularFireAuth
       .signInWithEmailAndPassword(authData.email, authData.password)
       .then((res) => {
         console.log('authloginres', res);
         // this.uiServ.loadingStateChanged.next(false);
-        this.store.dispatch(new UI.Stop_Loading());
+        this.store.dispatch(new UI.StopLoading());
         // this.authSuccessFull();
       })
       .catch((err) => {
         console.log('authloginerr', err);
         // this.uiServ.loadingStateChanged.next(false);
-        this.store.dispatch(new UI.Stop_Loading());
+        this.store.dispatch(new UI.StopLoading());
         this.uiServ.showSnackbar(err.message, undefined, 3000);
         // this.matSnackBar.open(err, undefined, {
         //   duration: 3000,
