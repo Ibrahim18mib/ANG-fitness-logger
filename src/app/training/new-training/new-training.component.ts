@@ -46,6 +46,11 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
         // this.isLoading = false
       }
     );
+    this.fetchExercise();
+  }
+
+  fetchExercise() {
+    console.log('Fetching OR REtry Fetch Clicked');
     this.ExerciseServ.fetchAvailableExercise();
   }
 
@@ -55,7 +60,12 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.exerciseSubscription.unsubscribe();
-    this.loadSubscription.unsubscribe();
+    if (this.exerciseSubscription) {
+      this.exerciseSubscription.unsubscribe();
+    }
+
+    if (this.loadSubscription) {
+      this.loadSubscription.unsubscribe();
+    }
   }
 }

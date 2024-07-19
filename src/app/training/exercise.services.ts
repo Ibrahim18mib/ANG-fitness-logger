@@ -29,6 +29,8 @@ export class ExerciseService {
         .snapshotChanges()
         .pipe(
           map((docArray) => {
+            // throw new Error();
+
             return docArray.map((doc) => {
               const id = doc.payload.doc.id;
               const data: any = doc.payload.doc.data();
@@ -42,12 +44,23 @@ export class ExerciseService {
             });
           })
         )
-        .subscribe((exercises: Exercise[]) => {
-          // console.log("fetched exercisess",exercises);
-          this.uiServ.loadingStateChanged.next(false);
-          this.availableExercises = exercises;
-          this.exercisesChanged.next([...this.availableExercises]);
-        })
+        .subscribe(
+          (exercises: Exercise[]) => {
+            // console.log("fetched exercisess",exercises);
+            this.uiServ.loadingStateChanged.next(false);
+            this.availableExercises = exercises;
+            this.exercisesChanged.next([...this.availableExercises]);
+          },
+          (error) => {
+            this.uiServ.loadingStateChanged.next(false);
+            this.uiServ.showSnackbar(
+              'Error in Fetching DAta,Please try again ',
+              undefined,
+              3000
+            );
+            this.exercisesChanged.next(null);
+          }
+        )
     );
   }
 

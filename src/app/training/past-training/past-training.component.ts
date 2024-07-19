@@ -74,7 +74,9 @@ export class PastTrainingComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.exChangedSubscription.unsubscribe();
+    if (this.exChangedSubscription) {
+      this.exChangedSubscription.unsubscribe();
+    }
   }
 
   getRowClass(state: string): string {
@@ -85,9 +87,4 @@ export class PastTrainingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return ''; // Return empty string for default case
   }
- 
 }
-
-
-
-
