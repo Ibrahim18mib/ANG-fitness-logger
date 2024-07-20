@@ -11,13 +11,14 @@ import { UIService } from '../../sharedUI/ui.service';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducer';
 import * as UI from '../../sharedUI/ui.actions';
+import * as AUTH from '../../app/auth/auth.actions';
 
 @Injectable()
 export class AuthService {
   private user!: User | null;
-  authChange = new Subject<boolean>();
+  // authChange = new Subject<boolean>();
 
-  private isAuthenticated = false;
+  // private isAuthenticated = false;
 
   constructor(
     private route: Router,
@@ -30,15 +31,20 @@ export class AuthService {
   initAuthListener() {
     this.angularFireAuth.authState.subscribe((user) => {
       if (user) {
-        this.isAuthenticated = true;
-        this.authChange.next(true);
+        this.store.dispatch(new AUTH.SetAuthenticated());
+        // this.isAuthenticated = true;
+        // this.authChange.next(true);
+
         this.route.navigate(['/training']);
       } else {
         this.exerciseServ.cancelledSubscriptions();
         this.user = null;
-        this.authChange.next(false);
+        // this.authChange.next(false);
+        // this.isAuthenticated = false;
         this.route.navigate(['/login']);
-        this.isAuthenticated = false;
+        this.store.dispatch(new AUTH.SetUnauthenticated());
+        
+        
       }
     });
   }
@@ -103,11 +109,11 @@ export class AuthService {
   //   return { ...this.user };
   // }
 
-  isAuth() {
-    console.log('thisuserauth', this.user);
-    console.log('this.isAuthenticated', this.isAuthenticated);
-    return this.isAuthenticated;
-  }
+  // isAuth() {
+  //   console.log('thisuserauth', this.user);
+  //   console.log('this.isAuthenticated', this.isAuthenticated);
+  //   return this.isAuthenticated;
+  // }
 
   // private authSuccessFull(): void {
   //   this.isAuthenticated = true;

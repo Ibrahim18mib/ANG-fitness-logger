@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { StopTrainingComponent } from './stop-training.component';
 import { ExerciseService } from '../exercise.services';
+import * as fromTraining from '../exercise.reducer';
+import { Store } from '@ngrx/store';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-current-training',
@@ -14,7 +17,8 @@ export class CurrentTrainingComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private exerciseServ: ExerciseService
+    private exerciseServ: ExerciseService,
+    private store: Store<fromTraining.State>
   ) {}
 
   ngOnInit(): void {
@@ -22,20 +26,24 @@ export class CurrentTrainingComponent implements OnInit {
   }
 
   startorResume() {
-    const runningExercise = this.exerciseServ.getRunningExercise();
-    if (runningExercise && runningExercise.duration !== undefined) {
-      const stepSec = (runningExercise.duration / 100) * 1000;
-      console.log('deuration in start or resume', stepSec);
-      this.timer = setInterval(() => {
-        this.progress = this.progress + 1;
-        if (this.progress >= 100) {
-          this.exerciseServ.completeExercise();
-          clearInterval(this.timer);
+    this.store
+      .select(fromTraining.getActiveExercise)
+      .pipe(take(1))
+      .subscribe((ex) => {
+        if (ex && ex.duration !== undefined) {
+          const stepSec = (ex.duration / 100) * 1000;
+          console.log('deuration in start or resume', stepSec);
+          this.timer = setInterval(() => {
+            this.progress = this.progress + 1;
+            if (this.progress >= 100) {
+              this.exerciseServ.completeExercise();
+              clearInterval(this.timer);
+            }
+          }, stepSec);
+        } else {
+          console.error('No running exercise or duration is not defined.');
         }
-      }, stepSec);
-    } else {
-      console.error('No running exercise or duration is not defined.');
-    }
+      });
   }
 
   onStop() {

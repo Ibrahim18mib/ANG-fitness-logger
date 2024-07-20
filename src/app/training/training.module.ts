@@ -7,6 +7,8 @@ import { TimestampDatePipe } from '../custom-date.pipe';
 import { StopTrainingComponent } from './current-training/stop-training.component';
 import { SharedModule } from '../../sharedUI/shared.module';
 import { TrainingRoutingModule } from './training-routing.module';
+import { StoreModule } from '@ngrx/store';
+import { exerciseReducer } from './exercise.reducer';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,11 @@ import { TrainingRoutingModule } from './training-routing.module';
     PastTrainingComponent,
     StopTrainingComponent,
   ],
-  imports: [SharedModule, TrainingRoutingModule],
+  imports: [
+    SharedModule,
+    TrainingRoutingModule,
+    StoreModule.forFeature('training', exerciseReducer),
+  ],
   exports: [],
   providers: [TimestampDatePipe],
 })
